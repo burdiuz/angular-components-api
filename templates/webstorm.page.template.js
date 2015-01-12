@@ -6,9 +6,9 @@
 /**
  * @namespace components
  */
-window.components = window.components || {};
+window.pages = window.pages || {};
 (function(){
-  var components = window.components;
+  var pages = window.pages;
   // ----------------------- Component Definition
   /**
    * @class ${Component_name}Controller
@@ -21,13 +21,15 @@ window.components = window.components || {};
      * @type {${Component_name}Controller}
      */
     var ctrl = this;
-    this.${DS}initialize(${DS}scope);
-    // custom controller code
+    this.${DS}initialize(${DS}scope, null, function(){
+      this.${DS}childAdded.handleOfType(components.${Child_component}, function(childComponent){
+        // child component of specific type was added
 
 
 
-
+      });
     });
+    // custom controller actions
   }
   /**
    * @class components.${Component_name}
@@ -38,11 +40,11 @@ window.components = window.components || {};
    */
   function ${Component_name}(${DS}scope, target){
     this.${DS}initialize(${DS}scope, target);
-    // custom component facade methods, events and properties
+
 
 
   }
-  components.Component.extend(${Component_name});
+  pages.Component.extend(${Component_name});
   // ----------------------- Component Configuration
   /**
    * @type {angular.Module}
@@ -57,7 +59,15 @@ window.components = window.components || {};
   ${Component_name}.register = function(){
     module = angular.module(${Component_name}.NAME, [
       // component dependencies
+      "components.${Child_component}"
     ]);
+    // name for component directive -- name of the component class name starting from lowercase character
+    module.directive(${Page_directive}, function(){
+      return{
+        restrict: "E",
+        templateUrl: "templates/${Page_directive}.html"
+      }
+    });
     module.controller(${Component_name}.NAME, [
       '${DS}scope',
       aw.components.Component.registerController(${Component_name}Controller, ${Component_name})

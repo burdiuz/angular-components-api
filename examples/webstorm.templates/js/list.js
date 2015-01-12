@@ -1,74 +1,84 @@
 /**
  * Created by Oleg Galabura on 11.01.2015.
- * @exports components.TemplateTest
+ * @author Oleg Galabura
+ * @exports components.List
  */
 /**
  * @namespace components
  */
 window.components = window.components || {};
 (function () {
+  var components = window.components;
   // ----------------------- Component Definition
   /**
-   * @class TemplateTestController
+   * @class ListController
    * @extends aw.components.utils.ComponentController
    * @param $scope
    * @constructor
    */
-  function TemplateTestController($scope) {
+  function ListController($scope) {
     /**
-     * @type {TemplateTestController}
+     * @type {ListController}
      */
     var ctrl = this;
     this.$initialize($scope, null, function () {
       this.$addedToParent.handle(function (parentComponent) {
+        // added to parent component
 
+
+        // tell parent component is ready
+        ctrl.facade.ready.$fire();
       });
+      // custom controller actions
+
+
+
     });
   }
 
   /**
-   * @class components.TemplateTest
+   * @class components.List
    * @extends aw.components.Component
    * @param {Object} $scope
    * @param {aw.components.utils.ComponentController} target
    * @constructor
    */
-  function TemplateTest($scope, target) {
+  function List($scope, target) {
     this.$initialize($scope, target);
-
+    // event for ready state of the component
+    this.ready = this.$createListener();
+    // custom component facade methods, events and properties
 
   }
 
-  aw.components.Component.extend(TemplateTest);
+  components.Component.extend(List);
   // ----------------------- Component Configuration
   /**
-   * @type {Module}
+   * @type {angular.Module}
    */
   var module;
-  TemplateTest.NAME = 'components.TemplateTest';
-  Object.defineProperty(TemplateTest, "module", {
+  List.NAME = 'components.List';
+  Object.defineProperty(List, "module", {
     get: function () {
       return module;
     }
   });
-  TemplateTest.register = function () {
-    module = angular.module(TemplateTest.NAME, [
+  List.register = function () {
+    module = angular.module(List.NAME, [
       // component dependencies
+      "components."
     ]);
-    // name for component directive
-    var name = TemplateTest.NAME;
-    name = name.charAt().toLowerCase() + name.substr(1);
-    module.directive(name, function () {
+    module.directive(list, function () {
       return {
         restrict: "AE",
-        template: '<div ng-controller="components.TemplateTest as ' + name + '"></div>'
+        templateUrl: "templates/list.html"
       }
     });
-    module.controller(TemplateTest.NAME, [
+    module.controller(List.NAME, [
       '$scope',
-      aw.components.Component.registerController(TemplateTestController, TemplateTest)
+      aw.components.Component.registerController(ListController, List)
     ]);
   };
   // ----------------------- Component Registration and Initialization
-  TemplateTest.register();
+  List.register();
 })();

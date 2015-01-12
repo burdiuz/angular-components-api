@@ -21,13 +21,29 @@ window.components = window.components || {};
      * @type {${Component_name}Controller}
      */
     var ctrl = this;
-    this.${DS}initialize(${DS}scope);
-    // custom controller code
+    this.${DS}initialize(${DS}scope, null, function(){
+      this.${DS}addedToParent.handle(function(parentComponent){
+        // added to parent component
 
 
+        // tell parent component is ready
+        ctrl.facade.ready.${DS}fire();
+      });
+      this.${DS}childAdded.handleOfType(components.${Child_component}, function(childComponent){
+        // child component of specific type was added
 
 
+        // wait till child component is ready
+        childComponent.ready.handle(childComponentReadyHandler);
+      });
     });
+    // custom controller actions
+
+
+
+    function childComponentReadyHandler(data){
+      // childComponent ready handler
+    }
   }
   /**
    * @class components.${Component_name}
@@ -38,8 +54,9 @@ window.components = window.components || {};
    */
   function ${Component_name}(${DS}scope, target){
     this.${DS}initialize(${DS}scope, target);
+    // event for ready state of the component
+    this.ready = this.${DS}createListener();
     // custom component facade methods, events and properties
-
 
   }
   components.Component.extend(${Component_name});
@@ -57,7 +74,14 @@ window.components = window.components || {};
   ${Component_name}.register = function(){
     module = angular.module(${Component_name}.NAME, [
       // component dependencies
+      "components.${Child_component}"
     ]);
+    module.directive(${Component_directive}, function(){
+      return {
+        restrict: "AE",
+        templateUrl: "templates/${Component_directive}.html"
+      }
+    });
     module.controller(${Component_name}.NAME, [
       '${DS}scope',
       aw.components.Component.registerController(${Component_name}Controller, ${Component_name})
