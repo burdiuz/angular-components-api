@@ -1,0 +1,27 @@
+{
+  "name": "angular-components-api",
+  "version": "0.0.1",
+  "main": "./src/*",
+  "ignore": [
+    ".*",
+    "examples",
+    "tests"
+  ],
+  "keywords":[
+    "angular",
+    "components",
+    "components-core",
+    "components-framework",
+    "controller-components"
+  ],
+  "dependencies": {
+    "jquery": ">=1.9",
+    "bootstrap": ">=3",
+    "angular": ">=1.2.0"
+  },
+  "devDependencies": {
+    "mocha": ">=2.1.0",
+    "chai": ">=1.10.0",
+    "sinon": ">=1.12.2"
+  }
+} 
