@@ -20,5 +20,7 @@ Webstorm Templates:
 * bundle template - Includes Component, ComponentController and Directive definitions
 * complete template - Includes Everything templated, lots of settings
 * component template - Component facade class with configuration
-* controller template - Angular Component-ready Controller template
-(WebStorm Templates Help page)[https://www.jetbrains.com/webstorm/help/creating-and-editing-file-templates.html#d1273479e250]
+* controller template - Angular Component-ready Controller template  
+[WebStorm Templates Help page](https://www.jetbrains.com/webstorm/help/creating-and-editing-file-templates.html#d1273479e250)
+
+http://daringfireball.net/projects/markdown/syntax#link

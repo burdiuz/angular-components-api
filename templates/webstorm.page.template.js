@@ -44,13 +44,14 @@ window.pages = window.pages || {};
 
 
   }
-  pages.Component.extend(${Component_name});
+  aw.components.Component.extend(${Component_name});
+  pages.${Component_name} = ${Component_name};
   // ----------------------- Component Configuration
   /**
    * @type {angular.Module}
    */
   var module;
-  ${Component_name}.NAME = 'components.${Component_name}';
+  ${Component_name}.NAME = 'pages.${Component_name}';
   Object.defineProperty(${Component_name}, "module", {
     get: function(){
       return module;
@@ -62,7 +63,7 @@ window.pages = window.pages || {};
       "components.${Child_component}"
     ]);
     // name for component directive -- name of the component class name starting from lowercase character
-    module.directive(${Page_directive}, function(){
+    module.directive("${Page_directive}", function(){
       return{
         restrict: "E",
         templateUrl: "templates/${Page_directive}.html"

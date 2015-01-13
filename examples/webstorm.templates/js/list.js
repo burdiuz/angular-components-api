@@ -21,19 +21,15 @@ window.components = window.components || {};
      * @type {ListController}
      */
     var ctrl = this;
-    this.$initialize($scope, null, function () {
-      this.$addedToParent.handle(function (parentComponent) {
-        // added to parent component
-
-
-        // tell parent component is ready
-        ctrl.facade.ready.$fire();
-      });
-      // custom controller actions
-
-
-
-    });
+    this.$initialize($scope);
+    /**
+     * @type {Object}
+     */
+    this.selected = null;
+    this.select = function(item){
+      ctrl.selected = item;
+      this.facade.selected.$fire(item);
+    }
   }
 
   /**
@@ -45,13 +41,19 @@ window.components = window.components || {};
    */
   function List($scope, target) {
     this.$initialize($scope, target);
-    // event for ready state of the component
-    this.ready = this.$createListener();
     // custom component facade methods, events and properties
-
+    Object.defineProperty(this, "list", {
+      get: function(){
+        return $scope.list;
+      },
+      set: function(value){
+        $scope.list = value;
+      }
+    });
+    this.selected = this.$createListener();
   }
-
-  components.Component.extend(List);
+  aw.components.Component.extend(List);
+  components.List = List;
   // ----------------------- Component Configuration
   /**
    * @type {angular.Module}
@@ -64,14 +66,17 @@ window.components = window.components || {};
     }
   });
   List.register = function () {
-    module = angular.module(List.NAME, [
-      // component dependencies
-      "components."
-    ]);
-    module.directive(list, function () {
+    module = angular.module(List.NAME, []);
+    module.directive("list", function () {
       return {
         restrict: "AE",
         templateUrl: "templates/list.html"
+      }
+    });
+    module.directive("listItem", function () {
+      return {
+        restrict: "E",
+        templateUrl: "templates/listitem.html"
       }
     });
     module.controller(List.NAME, [

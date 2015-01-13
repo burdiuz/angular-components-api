@@ -59,7 +59,8 @@ window.components = window.components || {};
     // custom component facade methods, events and properties
 
   }
-  components.Component.extend(${Component_name});
+  aw.components.Component.extend(${Component_name});
+  components.${Component_name} = ${Component_name};
   // ----------------------- Component Configuration
   /**
    * @type {angular.Module}
@@ -76,7 +77,7 @@ window.components = window.components || {};
       // component dependencies
       "components.${Child_component}"
     ]);
-    module.directive(${Component_directive}, function(){
+    module.directive("${Component_directive}", function(){
       return {
         restrict: "AE",
         templateUrl: "templates/${Component_directive}.html"

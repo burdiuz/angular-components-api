@@ -106,7 +106,7 @@ window.aw.events = window.aw.events || {};
         if(dataConstructor) {
           this.handle(EventListener.typeDependentCallback(dataConstructor, callback));
         }else{
-          throw new Error('aw.EventListener#handleOfType requires firstr parameter to be type string or constructor function, "'+dataConstructor+'" given.');
+          throw new Error('aw.EventListener#handleOfType requires first parameter to be type string or constructor function, "'+dataConstructor+'" given.');
         }
       };
       /**

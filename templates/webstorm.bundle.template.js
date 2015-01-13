@@ -42,7 +42,8 @@ window.components = window.components || {};
 
 
   }
-  components.Component.extend(${Component_name});
+  aw.components.Component.extend(${Component_name});
+  components.${Component_name} = ${Component_name};
   // ----------------------- Component Configuration
   /**
    * @type {angular.Module}

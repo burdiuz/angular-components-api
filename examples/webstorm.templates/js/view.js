@@ -28,6 +28,7 @@ window.components = window.components || {};
       };
       this.setEntity = function (entity){
         $scope.entity = entity;
+        this.$refresh();
       };
     });
   }
@@ -47,12 +48,13 @@ window.components = window.components || {};
         return target.getEntity();
       },
       set: function(value){
-        target.setEntity();
+        target.setEntity(value);
       }
     });
   }
 
-  components.Component.extend(View);
+  aw.components.Component.extend(View);
+  components.View = View;
   // ----------------------- Component Configuration
   /**
    * @type {angular.Module}
@@ -66,7 +68,7 @@ window.components = window.components || {};
   });
   View.register = function () {
     module = angular.module(View.NAME, []);
-    module.directive(view, function () {
+    module.directive("view", function () {
       return {
         restrict: "AE",
         templateUrl: "templates/view.html"

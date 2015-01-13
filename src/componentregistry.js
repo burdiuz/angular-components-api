@@ -1,14 +1,26 @@
 /**
  * Created by Oleg Galaburda on 11.01.2015.
+ * @exports aw.components.utils.ComponentScopeRegistry
  */
+/**
+ * @namespace aw
+ */
+window.aw = window.aw || {};
+/**
+ * @namespace aw.components
+ */
+window.aw.components = window.aw.components || {};
+/**
+ * @namespace aw.components.utils
+ */
+window.aw.components.utils = window.aw.components.utils || {};
 /*
  * Component instance registry, holds all created component instances
  * and their scopes. Also, after adding new component will resolve its
  * connection to parent component.
  */
-window.aw = window.aw || {};
 (function(){
-  var aw = window.aw;
+  var utils = window.aw.components.utils;
   function ComponentScopeRegistry(){
     /**
      * Component scope objects
@@ -24,7 +36,7 @@ window.aw = window.aw || {};
      * Add component instance to registry. This will be
      * automatically done while component initialization.
      * @function add
-     * @memberOf aw.ComponentScopeRegistry
+     * @memberOf aw.components.utils.ComponentScopeRegistry
      * @param {Object} $scope
      * @param {aw.Component} component
      * @instance
@@ -46,7 +58,7 @@ window.aw = window.aw || {};
     /**
      * Find parent component by child component scope object.
      * @function parentByScope
-     * @memberOf aw.ComponentScopeRegistry
+     * @memberOf aw.components.utils.ComponentScopeRegistry
      * @param {Object} $scope
      * @returns {*}
      */
@@ -67,7 +79,7 @@ window.aw = window.aw || {};
     /**
      * Find parent component.
      * @function parent
-     * @memberOf aw.ComponentScopeRegistry
+     * @memberOf aw.components.utils.ComponentScopeRegistry
      * @param {aw.Component} component
      * @returns {*}
      */
@@ -78,7 +90,7 @@ window.aw = window.aw || {};
     /**
      * Remove component instance from registry by its scope.
      * @function removeByScope
-     * @memberOf aw.ComponentScopeRegistry
+     * @memberOf aw.components.utils.ComponentScopeRegistry
      * @param {Object} $scope
      * @instance
      */
@@ -90,7 +102,7 @@ window.aw = window.aw || {};
     };
     /**
      * @function remove
-     * @memberOf aw.ComponentScopeRegistry
+     * @memberOf aw.components.utils.ComponentScopeRegistry
      * Remove component instance from registry.
      * @param {aw.Component} component
      * @instance
@@ -120,7 +132,7 @@ window.aw = window.aw || {};
     }).bind(this);
     /**
      * @function getScope
-     * @memberOf aw.ComponentScopeRegistry
+     * @memberOf aw.components.utils.ComponentScopeRegistry
      * @param {aw.Component} component
      * @instance
      */
@@ -145,5 +157,5 @@ window.aw = window.aw || {};
       return result;
     };
   }
-  aw.ComponentScopeRegistry = new ComponentScopeRegistry();
+  utils.ComponentScopeRegistry = new ComponentScopeRegistry();
 })();
