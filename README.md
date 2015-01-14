@@ -77,7 +77,7 @@ Here PageController is angular controller and Page is class which will be instan
 After "registration" controller will be mixed with aw.components.utils.ComponentController class and will gain some methods it needs to be a component:
 * $initialize - initialize component instance, must be called as sooner as better.
 * $createListener - creates new event-promise
-* $refresh - timeout $digest call. even if this function will be called N times in a row, $digest will be called once.
+* $refresh - timeout $digest call. even if this function will be called N times in a row, $digest will be called once.    
 And predefined events-promises:
 * $addedToParent - when this component is added to parent, you will receive link to parent component facade.
 * $childAdded - when child component is added.
