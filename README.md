@@ -41,7 +41,7 @@ see runtime error about accessing method of undefined.
     $scope.$on("passData", function(data){
       console.log(data);
     });
-    //Controller 2
+    //Controller 2 has typo in event name
     $scope.$emit("passDeta", "some data");
 ```
 They just cannot interfere with other such notifications, so you are free of string, typos and naming conventions.
