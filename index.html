@@ -1,0 +1,161 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Angular-components-api by burdiuz</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Angular-components-api</h1>
+        <p>Simple yet effective API for components based communication over angular framework</p>
+
+        <p class="view"><a href="https://github.com/burdiuz/angular-components-api">View the Project on GitHub <small>burdiuz/angular-components-api</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/burdiuz/angular-components-api/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/burdiuz/angular-components-api/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/burdiuz/angular-components-api">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a id="angular-components-api" class="anchor" href="#angular-components-api" aria-hidden="true"><span class="octicon octicon-link"></span></a>angular-components-api</h1>
+
+<p>Simple yet effective API for components based communication over angular framework</p>
+
+<h1>
+<a id="work-in-progress" class="anchor" href="#work-in-progress" aria-hidden="true"><span class="octicon octicon-link"></span></a>Work in progress...</h1>
+
+<h1>
+<a id="promises-instead-of-events" class="anchor" href="#promises-instead-of-events" aria-hidden="true"><span class="octicon octicon-link"></span></a>Promises instead of events</h1>
+
+<p>A little bit reworked promises which allow us to assign handlers and execute them if something coming.
+I've called them EventListeners because of their purpose, but there are too many differences between them to compare.
+To use them you need only object of aw.EventLsitener</p>
+
+<div class="highlight highlight-javascript"><pre>    <span class="pl-c">// let's create EventListener object</span>
+    <span class="pl-s">var</span> listener <span class="pl-k">=</span> aw.events.EventListener.create();
+    <span class="pl-c">//subsctribe for event its going to fire</span>
+    <span class="pl-c">//handle is just an alias of then()</span>
+    listener.handle(<span class="pl-st">function</span>(<span class="pl-vpf">data</span>){
+        <span class="pl-en">console</span><span class="pl-s3">.log</span>(<span class="pl-s1"><span class="pl-pds">'</span>first listener<span class="pl-pds">'</span></span>, data);
+    });
+    listener.handle(<span class="pl-st">function</span>(){
+        <span class="pl-en">console</span><span class="pl-s3">.log</span>(<span class="pl-s1"><span class="pl-pds">'</span>second listener<span class="pl-pds">'</span></span>);
+        <span class="pl-k">return</span> <span class="pl-s1"><span class="pl-pds">'</span>data<span class="pl-pds">'</span></span>;
+    }).then(<span class="pl-st">function</span>(<span class="pl-vpf">data</span>){
+        <span class="pl-en">console</span><span class="pl-s3">.log</span>(<span class="pl-s1"><span class="pl-pds">'</span>third listener<span class="pl-pds">'</span></span>, data);
+    });
+    <span class="pl-c">//then fire event with some data</span>
+    listener.$fire(<span class="pl-s1"><span class="pl-pds">'</span>ok<span class="pl-pds">'</span></span>);
+    <span class="pl-c">/*Output:</span>
+<span class="pl-c">     first listener ok</span>
+<span class="pl-c">     second listener</span>
+<span class="pl-c">     third listener data</span>
+<span class="pl-c">     */</span></pre></div>
+
+<p>Basically it just executes list of functions/handlers passing some data object to them.
+This communication trick was used not to replace events but mix them, each have own purpose.
+I found them to be better solution to communicate between components, because they are
+accessible locally, only between components close to each other. So they are good to connect,
+for example, child and parent components or siblings.</p>
+
+<p>Since they are created as objects, to have access to them, they should be available as properties
+or returned via method calls, so if you misspell such "event" it will not die silently, but you will
+see runtime error about accessing method of undefined.</p>
+
+<div class="highlight highlight-javascript"><pre>    <span class="pl-c">//Controller 1</span>
+    $scope.$on(<span class="pl-s1"><span class="pl-pds">"</span>passData<span class="pl-pds">"</span></span>, <span class="pl-st">function</span>(<span class="pl-vpf">data</span>){
+      <span class="pl-en">console</span><span class="pl-s3">.log</span>(data);
+    });
+    <span class="pl-c">//Controller 2 has typo in event name</span>
+    $scope.$emit(<span class="pl-s1"><span class="pl-pds">"</span>passDeta<span class="pl-pds">"</span></span>, <span class="pl-s1"><span class="pl-pds">"</span>some data<span class="pl-pds">"</span></span>);</pre></div>
+
+<p>They just cannot interfere with other such notifications, so you are free of string, typos and naming conventions.</p>
+
+<div class="highlight highlight-javascript"><pre>    $scope.$on(<span class="pl-s1"><span class="pl-pds">"</span>passData1<span class="pl-pds">"</span></span>, <span class="pl-st">function</span>(<span class="pl-vpf">dataType1</span>){
+      <span class="pl-en">console</span><span class="pl-s3">.log</span>(dataType1);
+    });
+    $scope.$on(<span class="pl-s1"><span class="pl-pds">"</span>passData2<span class="pl-pds">"</span></span>, <span class="pl-st">function</span>(<span class="pl-vpf">dataType2</span>){
+      <span class="pl-en">console</span><span class="pl-s3">.log</span>(dataType2);
+    });
+    $scope.$on(<span class="pl-s1"><span class="pl-pds">"</span>passData3<span class="pl-pds">"</span></span>, <span class="pl-st">function</span>(<span class="pl-vpf">dataType3</span>){
+      <span class="pl-en">console</span><span class="pl-s3">.log</span>(dataType3);
+    });</pre></div>
+
+<p>To sum up:</p>
+
+<ul>
+<li>Promises are real properties living on components facade, they will trigger runtime error if you misspell them.</li>
+<li>They don't need to have some complex logic, they have local area of availability.</li>
+<li>You can define what events exactly will be fired from component with property per promise. Most IDEs will have context help regarding this.</li>
+<li>You can still use events as you always do, this is only recommended to use promises as communication base between components.</li>
+</ul>
+
+<h1>
+<a id="component" class="anchor" href="#component" aria-hidden="true"><span class="octicon octicon-link"></span></a>Component</h1>
+
+<p>Currently only angular controllers are capable to be represented as components.
+Each component must have controller and facade object which will be used as public API of controller.
+Facade object will be passed to parent and children components on handshake sequence. To use controller as component, it should be registered</p>
+
+<div class="highlight highlight-javascript"><pre>    <span class="pl-sv">module</span>.controller(Page.NAME, [
+      <span class="pl-s1"><span class="pl-pds">"</span>$scope<span class="pl-pds">"</span></span>,
+      <span class="pl-s1"><span class="pl-pds">"</span>$http<span class="pl-pds">"</span></span>,
+      aw.<span class="pl-sc">components</span>.Component.registerController(PageController, Page)
+    ]);</pre></div>
+
+<p>Here PageController is angular controller and Page is class which will be instantiated every time when controller is initialized.
+After "registration" controller will be mixed with aw.components.utils.ComponentController class and will gain some methods it needs to be a component:</p>
+
+<ul>
+<li>$initialize - initialize component instance, must be called as sooner as better.</li>
+<li>$createListener - creates new event-promise</li>
+<li>$refresh - timeout $digest call. even if this function will be called N times in a row, $digest will be called once.<br>
+And predefined events-promises:</li>
+<li>$addedToParent - when this component is added to parent, you will receive link to parent component facade.</li>
+<li>$childAdded - when child component is added.</li>
+<li>$childRemoved - when child component is added.</li>
+</ul>
+
+<h1>
+<a id="communication-between-components" class="anchor" href="#communication-between-components" aria-hidden="true"><span class="octicon octicon-link"></span></a>Communication between components</h1>
+
+<p>When component instance created and its added to application, parent component will be notified with "addedToParent" event.
+Then component will be notified that its added to some parent component so they can start communicating.</p>
+
+<h1>
+<a id="ide-templates" class="anchor" href="#ide-templates" aria-hidden="true"><span class="octicon octicon-link"></span></a>IDE Templates</h1>
+
+<p>Webstorm Templates:</p>
+
+<ul>
+<li>bundle template - Includes Component, ComponentController and Directive definitions</li>
+<li>complete template - Includes Everything templated, lots of settings</li>
+<li>component template - Component facade class with configuration</li>
+<li>controller template - Angular Component-ready Controller template<br>
+<a href="https://www.jetbrains.com/webstorm/help/creating-and-editing-file-templates.html#d1273479e250">WebStorm Templates Help page</a>
+</li>
+</ul>
+
+<p><a href="http://daringfireball.net/projects/markdown/syntax#link">http://daringfireball.net/projects/markdown/syntax#link</a></p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/burdiuz">burdiuz</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
