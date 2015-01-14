@@ -27,7 +27,6 @@ window.components = window.components || {};
 
 
 
-    });
   }
   /**
    * @class components.${Component_name}
