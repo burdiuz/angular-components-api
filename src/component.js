@@ -33,6 +33,88 @@ window.aw.components = window.aw.components || {};
         throw new Error('Component instance initialized already.');
       }
       /**
+       * @property $children
+       * @memberOf aw.components.utils.ComponentController
+       * @type {aw.components.utils.Component[]}
+       * @instance
+       */
+      Object.defineProperty(this, '$children', {
+        get: function ComponentController_$children() {
+          return children.slice();
+        }
+      });
+      /**
+       * Child components
+       * @private
+       * @type {aw.components.utils.ComponentController[]}
+       */
+      var children = [];
+      /**
+       * Add child component to this component children list.
+       * This function is private to other components and must not
+       * be called. It will be invoked automatically when child
+       * component registers itself as component instance.
+       * @function $$removeChild
+       * @memberOf aw.components.utils.ComponentController
+       * @param {aw.components.utils.Component} component
+       * @instance
+       * @private
+       */
+      this.$$addChild = function ComponentController_$$addChild(component) {
+        if (component) {
+          children.push(component);
+          this.$childAdded.$fire(component.facade || component);
+        }
+      };
+      /**
+       * Remove child component from this component children list.
+       * This function is private to other components and must not
+       * be called. It will be invoked automatically when child
+       * component being removed from component instance registry.
+       * @function $$removeChild
+       * @memberOf aw.components.utils.ComponentController
+       * @param {aw.components.utils.Component} component
+       * @instance
+       * @private
+       */
+      this.$$removeChild = function ComponentController_$$removeChild(component) {
+        var index = children.indexOf();
+        if (component && index >= 0) {
+          children.splice(index, 1);
+          this.$childRemoved.$fire(component.facade || component);
+        }
+      };
+      /**
+       * Parent component
+       * @property $parent
+       * @memberOf aw.components.utils.ComponentController
+       * @type {aw.components.utils.ComponentController}
+       * @instance
+       */
+      Object.defineProperty(this, '$parent', {
+        get: function ComponentController_$parent() {
+          return parent;
+        }
+      });
+      var parent;
+      /**
+       * Set component to be a parent to this one.
+       * @property $$setParent
+       * @memberOf aw.components.utils.ComponentController
+       * @param {aw.components.utils.ComponentController} component
+       * @instance
+       * @private
+       */
+      this.$$setParent = function ComponentController_$$setParent(component) {
+        if (parent) {
+          this.$removedFromParent.$fire(parent.facade || parent);
+        }
+        parent = component;
+        if (parent) {
+          this.$addedToParent.$fire(parent.facade || parent);
+        }
+      };
+      /**
        * Create promise event listener that will be called every time when event fired.
        * @function $createListener
        * @memberOf aw.components.Component
@@ -41,6 +123,40 @@ window.aw.components = window.aw.components || {};
       this.$createListener = function Component_$createListener() {
         return aw.events.EventListener.create($scope);
       };
+      /**
+       * Executed when child component added. At this stage child does not know about parent component and its just finished initialization.
+       * @property $childAdded
+       * @memberOf aw.components.utils.ComponentController
+       * @type {aw.events.EventListener}
+       * @instance
+       */
+      this.$childAdded = this.$createListener();
+      /**
+       * Executed when child component removed
+       * @property $childRemoved
+       * @memberOf aw.components.utils.ComponentController
+       * @type {aw.events.EventListener}
+       * @instance
+       */
+      this.$childRemoved = this.$createListener();
+      /**
+       * Executed after component being added to the parent component.
+       * At this point, parent was notified about new child and probably
+       * already placed event handlers.
+       * @property $addedToParent
+       * @memberOf aw.components.utils.ComponentController
+       * @type {aw.events.EventListener}
+       * @instance
+       */
+      this.$addedToParent = this.$createListener();
+      /**
+       * Executed after component being removed from the parent component.
+       * @property $removedFromParent
+       * @memberOf aw.components.utils.ComponentController
+       * @type {aw.events.EventListener}
+       * @instance
+       */
+      this.$removedFromParent = this.$createListener();
       /**
        * @property $$initialized
        * @memberOf aw.components.Component

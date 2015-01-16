@@ -148,7 +148,7 @@ window.aw.components.utils = window.aw.components.utils || {};
      * @function getControllerRegistry
      */
     this.get = function ComponentScopeRegistry_get($scope){
-      if('$$component' in $scope && $scope.$$controller instanceof aw.Component) return $scope.$$controller;
+      if('$$component' in $scope && $scope.$$component instanceof aw.Component) return $scope.$$component;
       var index = scopes.indexOf($scope);
       var result;
       if(index>=0){
