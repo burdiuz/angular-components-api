@@ -13,20 +13,24 @@ window.aw.components = window.aw.components || {};
  * @namespace aw.components.utils
  */
 window.aw.components.utils = window.aw.components.utils || {};
+//TODO Add support for states should be $getState(), $setState() and facade.state, facade.stateChanged
+//TODO Component always must have 2 states INIT and DESTROY
 (function() {
   /**
    * @namespace aw.components.utils
    */
   var utils = window.aw.components.utils;
   /**
-   * Base class for all components controllers, must be loaded first with angular ignoring AMD
-   * @class aw.components.utils.ComponentController
+   * Base class for all components controllers
+   * @class
+   * @name aw.components.utils.ComponentController
    * @constructor
    */
   function ComponentController() {
+    var instance = this;
     /**
-     * @function $initialize
-     * @memberOf aw.components.utils.ComponentController
+     * @function
+     * @name aw.components.utils.ComponentController#$initialize
      * @param {Object} $scope
      * @param {aw.components.Component} facade
      * @param {Function} preinitHandler
@@ -35,9 +39,6 @@ window.aw.components.utils = window.aw.components.utils || {};
     this.$initialize = function ComponentController_$initialize($scope, facade, preinitHandler) {
       if (this.$$initialized) {
         throw new Error('Component instance initialized already.');
-      }
-      if ($scope) {
-        $scope.$$component = facade;
       }
       /**
        * @type {aw.utils.ValidationHandler}
@@ -50,24 +51,31 @@ window.aw.components.utils = window.aw.components.utils || {};
           $scope.$digest();
         }
       });
-      /*
+      /**
        * Register watcher to prevent double $digest() calls if component will use $refresh() method
+       * @type {Function}
        */
-      $scope.$watch(function () {
+      var digestListenerRemove = $scope.$watch(function () {
         //console.log(' --- exec $digest');
         refreshValidation.prevent();
       });
+      /*FIXME only if currentTarget === target
+      $scope.$on('$destroy', function(event){
+        _destroy.call(instance);
+        digestListenerRemove();
+        refreshValidation = null;
+        componentInterface = null;
+        instance = null;
+        facadde = null;
+      });
+      var _destroy;
+      this.$destroy = function(handler){
+        _destroy = handler;
+      };
+      */
       /**
-       * @property facade
-       * @memberOf aw.components.utils.ComponentController
-       * @type {Object}
-       * @readOnly
-       * @instance
-       */
-      Object.defineProperty(this, 'facade', {value: facade || this});
-      /**
-       * @function $refresh
-       * @memberOf aw.components.utils.ComponentController
+       * @function
+       * @name aw.components.utils.ComponentController#$refresh
        * Simply forces $scope.$apply()
        * Shortcut to if(!$scope.$$phase){ $scope.$apply() };
        * @instance
@@ -77,8 +85,8 @@ window.aw.components.utils = window.aw.components.utils || {};
         refreshValidation.call();
       };
       /**
-       * @function $refreshImmediately
-       * @memberOf aw.components.utils.ComponentController
+       * @function
+       * @name aw.components.utils.ComponentController#$refreshImmediately
        * Simply forces $scope.$apply()
        * Shortcut to if(!$scope.$$phase){ $scope.$apply() };
        * @instance
@@ -87,74 +95,91 @@ window.aw.components.utils = window.aw.components.utils || {};
         refreshValidation.callImmediately();
       };
       /**
-       * Create promise event listener that will be called every time when event fired.
-       * @property $createListener
-       * @memberOf aw.components.utils.ComponentController
-       * @returns {aw.events.EventListener}
-       * @instance
-       */
-      this.$createListener = function ComponentController_$createListener() {
-        return aw.events.EventListener.create($scope, refreshValidation.call);
-      };
-      /**
-       * Executed when child component added. At this stage child does not know about parent component and its just finished initialization.
-       * @property $childAdded
-       * @memberOf aw.components.utils.ComponentController
-       * @type {aw.events.EventListener}
-       * @instance
-       */
-      this.$childAdded = facade.$childAdded;
-      /**
-       * Executed when child component removed
-       * @property $childRemoved
-       * @memberOf aw.components.utils.ComponentController
-       * @type {aw.events.EventListener}
-       * @instance
-       */
-      this.$childRemoved = this.$childRemoved;
-      /**
-       * Executed after component being added to the parent component.
-       * At this point, parent was notified about new child and probably
-       * already placed event handlers.
-       * @property $addedToParent
-       * @memberOf aw.components.utils.ComponentController
-       * @type {aw.events.EventListener}
-       * @instance
-       */
-      this.$addedToParent = this.$addedToParent;
-      /**
-       * Executed after component being removed from the parent component.
-       * @property $removedFromParent
-       * @memberOf aw.components.utils.ComponentController
-       * @type {aw.events.EventListener}
-       * @instance
-       */
-      this.$removedFromParent = this.$removedFromParent;
-      /**
-       * @property $$initialized
-       * @memberOf aw.components.utils.ComponentController
-       * @type {boolean}
-       * @instance
+       * @type {aw.components.utils.ComponentInterface}
        * @private
        */
-      this.$$initialized = true;
+      var componentInterface = new aw.components.utils.ComponentInterface();
+      /**
+       * @function
+       * @returns {aw.events.EventListener}
+       */
+      this.$createListener =  componentInterface.createListener;
+      /**
+       * @type {aw.events.EventListener}
+       */
+      this.$childAdded = componentInterface.childAdded;
+      /**
+       * @type {aw.events.EventListener}
+       */
+      this.$childRemoved = componentInterface.childRemoved;
+      /**
+       * @type {aw.events.EventListener}
+       */
+      this.$addedToParent = componentInterface.addedToParent;
+      /**
+       * @type {aw.events.EventListener}
+       */
+      this.$removedFromParent = componentInterface.removedFromParent;
+      /**
+       * @property facade
+       * @memberOf aw.components.utils.ComponentController
+       * @type {Object}
+       * @readOnly
+       * @instance
+       */
+      Object.defineProperty(this, 'facade', {value: facade});
+      /**
+       * @property
+       * @name aw.components.utils.ComponentController#$children
+       * @type {aw.components.utils.Component[]}
+       * @instance
+       */
+      Object.defineProperty(this, '$children', {
+        get: function ComponentController_$children() {
+          return componentInterface.children.slice();
+        }
+      });
+      /**
+       * Parent component
+       * @property $parent
+       * @memberOf aw.components.utils.ComponentController
+       * @type {aw.components.utils.ComponentController}
+       * @instance
+       */
+      Object.defineProperty(this, '$parent', {
+        get: function ComponentController_$parent() {
+          return componentInterface.parent;
+        }
+      });
       /*
        Call preinitHandler if setup. Called after initialization but before being added to parent component.
        */
       if (typeof(preinitHandler) == "function") {
         preinitHandler.call(this);
       }
+      if ($scope) {
+        $scope.$$component = facade;
+        $scope.$$interface = componentInterface;
+      }
+      /**
+       * @property
+       * @name aw.components.utils.ComponentController#$initialized
+       * @type {boolean}
+       * @instance
+       * @private
+       */
+      Object.defineProperty(this, '$initialized', {value: true});
       /*
        Register component and find its parent. Starts event sequence $childAdded/$addedToParent if parent found.
        */
-      aw.components.utils.ComponentScopeRegistry.add($scope, facade);
+      aw.components.utils.ComponentScopeRegistry.add($scope, facade, componentInterface);
     };
   }
 
   aw.components.utils.ComponentController = ComponentController;
   /**
-   * @function isComponentController
-   * @memberOf ComponentController
+   * @function
+   * @name aw.components.utils.ComponentController.isComponentController
    * @param {Object} instance
    * @return {boolean}
    * @static
@@ -163,8 +188,8 @@ window.aw.components.utils = window.aw.components.utils || {};
     return instance instanceof ComponentController;
   };
   /**
-   * @function isComponentControllerClass
-   * @memberOf ComponentController
+   * @function
+   * @name aw.components.utils.ComponentController.isComponentControllerClass
    * @param {Function} constructor
    * @return {boolean}
    * @static
