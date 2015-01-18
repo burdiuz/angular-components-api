@@ -18,22 +18,22 @@ Currently its based on angular promises internally using `$q` service. But it is
 
 #Component registration
 
-To tell system, that you have components in an application thir classes must be registered and instances initialized using propagated methods. 
+To tell system, that you have components in an application, their classes must be registered and instances initialized with help of propagated methods. 
 Currently you can register any controller as component using `aw.components.Component.registerController()` method. This method accepts controller and controller facade classes as arguments and returns same controller class as result of its execution. Return value is a subject to change in future, so it is recommended to use this return value as argument in angular.Module.controller() method.
-After controller instance is created, if its a component instance, it must be initialized with this.$initialize() method. this method accepts arguments:
+After controller instance is created, if its a component instance, it must be initialized with `this.$initialize()` method. This method accepts arguments:
 
  1. $scope - scope instance for current component. This is the only required argument, using scope will be found its child and parent component.
- 2.  alternative facade instance object. Component facade instance will be created in initialization sequence, own for each controller instance. You may pass alternative facade object if you want specific functionality for instance which is being initialized. This object will be forced to be instance of aw.components.Component by replacing its prototype.
+ 2.  alternative facade instance object. Component facade instance will be created in initialization sequence, own for each controller instance. You may pass alternative facade object if you want specific functionality for instance which is being initialized. This object will be forced to be instance of `aw.components.Component` by replacing its prototype.
  3. preinitialization hander, which will be called after setting up component API but before registration and handshake sequence. 
 When initialization is complete, component controller will get $initialized property with TRUE value and component state will be INITIALIZED.
 
 # Handshake sequence
 When child component is being registered handshake sequence of events happens to introduce it with its parent component. This is perfect time to register event listeners and setup other communication for both. Whole initialization process can be broken into key turns:
 
- 1. Adding to scope special properties $$component and $$interface which will contain shortcut links to component and its internal interface. They are for internal use only, so forget about them. :-)
+ 1. Adding to scope special properties `$$component` and `$$interface` which will contain shortcut links to component and its internal interface. They are for internal use only, so forget about them. :-)
  2. Registration of component, scope, facade and interface object are being adeed to corresponding lists, so registry may find out which $scope connected to component to link them.
- 3. Tell parent that it has new child vis call of $childadded eventListener.
- 4. Tell child that it has parent component via $addedToParent eventListener.
+ 3. Tell parent that it has new child via call of `$childAdded` event listener.
+ 4. Tell child that it has parent component via `$addedToParent` event listener.
  - 
  -
  -
@@ -41,7 +41,7 @@ When child component is being registered handshake sequence of events happens to
 # Promises instead of events
 A little bit reworked promises which allow us to assign handlers and execute them if something coming. This is very specific short-range communication feature that is created not to replace but enrich communication possibilities.
 I've called them EventListeners because of their purpose, but there are too many differences between them to compare.
-To use them you need only object of aw.EventLsitener
+To use them you need only object of `aw.events.EventLsitener`
 ```javascript
     // let's create EventListener object
     var listener = aw.events.EventListener.create();
@@ -121,7 +121,7 @@ And predefined events-promises:
  - `$childRemoved` - when child component is added.
 
 # Communication between components
-When component instance created and its added to application, parent component will be notified with "addedToParent" event.
+When component instance created and its added to application, parent component will be notified with `addedToParent` event listener.
 Then component will be notified that its added to some parent component so they can start communicating.
 
 # API planned for release
@@ -185,15 +185,15 @@ event listeners:
 
 Component Registry
 methods:
- - add
- - parent
- - parentByScope
- - get
- - getInterface
+ - `add`
+ - `parent`
+ - `parentByScope`
+ - `get`
+ - `getInterface`
 properties:
 event listeners:
- - componentAdded
- - componentRemoved
+ - `componentAdded`
+ - `componentRemoved`
 
 
 # IDE Templates
