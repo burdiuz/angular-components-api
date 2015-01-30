@@ -60,19 +60,19 @@ window.aw.components.utils = window.aw.components.utils || {};
         refreshValidation.prevent();
       });
       /*FIXME only if currentTarget === target
-      $scope.$on('$destroy', function(event){
-        _destroy.call(instance);
-        digestListenerRemove();
-        refreshValidation = null;
-        componentInterface = null;
-        instance = null;
-        facadde = null;
-      });
-      var _destroy;
-      this.$destroy = function(handler){
-        _destroy = handler;
-      };
-      */
+       $scope.$on('$destroy', function(event){
+       _destroy.call(instance);
+       digestListenerRemove();
+       refreshValidation = null;
+       componentInterface = null;
+       instance = null;
+       facadde = null;
+       });
+       var _destroy;
+       this.$destroy = function(handler){
+       _destroy = handler;
+       };
+       */
       /**
        * @function
        * @name aw.components.utils.ComponentController#$refresh
@@ -121,8 +121,12 @@ window.aw.components.utils = window.aw.components.utils || {};
        */
       this.$removedFromParent = componentInterface.removedFromParent;
       /**
-       * @property facade
-       * @memberOf aw.components.utils.ComponentController
+       * @type {aw.events.EventListener}
+       */
+      this.$stateChanged = componentInterface.stateChanged;
+      /**
+       * @property
+       * @name  aw.components.utils.ComponentController#facade
        * @type {Object}
        * @readOnly
        * @instance
@@ -134,23 +138,21 @@ window.aw.components.utils = window.aw.components.utils || {};
        * @type {aw.components.utils.Component[]}
        * @instance
        */
-      Object.defineProperty(this, '$children', {
-        get: function ComponentController_$children() {
-          return componentInterface.children.slice();
-        }
-      });
+      Object.defineProperty(this, '$children', { get: componentInterface.getChildren() });
       /**
        * Parent component
-       * @property $parent
-       * @memberOf aw.components.utils.ComponentController
+       * @property
+       * @name  aw.components.utils.ComponentController#$parent
        * @type {aw.components.utils.ComponentController}
        * @instance
        */
-      Object.defineProperty(this, '$parent', {
-        get: function ComponentController_$parent() {
-          return componentInterface.parent;
-        }
-      });
+      Object.defineProperty(this, '$parent', { get: componentInterface.getParent() });
+      /**
+       *
+       * @type {Function}
+       */
+      this.$getState = componentInterface.getState;
+      this.$setState = componentInterface.setState;
       /*
        Call preinitHandler if setup. Called after initialization but before being added to parent component.
        */
@@ -173,6 +175,10 @@ window.aw.components.utils = window.aw.components.utils || {};
        Register component and find its parent. Starts event sequence $childAdded/$addedToParent if parent found.
        */
       aw.components.utils.ComponentScopeRegistry.add($scope, facade, componentInterface);
+      /*
+       Tell that this component changed state to initialized
+       */
+      componentInterface.setState(aw.data.ComponentStates.INITIALIZED);
     };
   }
 

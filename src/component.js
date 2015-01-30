@@ -31,31 +31,32 @@ window.aw.components = window.aw.components || {};
      * @instance
      */
     this.$initialize = function Component_$initialize($scope, target) {
-      if(this.$$initialized){
+      if(this.$initialized){
         throw new Error('Component instance initialized already.');
       }
       /**
        * Create promise event listener that will be called every time when event fired.
-       * @function $createListener
-       * @memberOf aw.components.Component
+       * @function
+       * @name  aw.components.Component#$createListener
        * @returns {aw.events.EventListener}
        */
       this.$createListener = function Component_$createListener() {
         return aw.events.EventListener.create($scope);
       };
       /**
-       * @property $$initialized
-       * @memberOf aw.components.Component
+       * @property
+       * @name  aw.components.Component#$initialized
        * @type {boolean}
        * @instance
        */
-      this.$$initialized = true;
+
+      Object.defineProperty(this, '$initialized', {value: true});
     };
   }
   aw.components.Component = Component;
   /**
-   * @function isComponent
-   * @memberOf aw.components.Component
+   * @function
+   * @name  aw.components.Component.isComponent
    * @param {Object} instance
    * @return {boolean}
    * @static
@@ -64,8 +65,8 @@ window.aw.components = window.aw.components || {};
     return instance instanceof Component;
   };
   /**
-   * @function isComponentClass
-   * @memberOf aw.components.Component
+   * @function
+   * @name  aw.components.Component.isComponentClass
    * @param {Function} constructor
    * @return {boolean}
    * @static
@@ -74,8 +75,8 @@ window.aw.components = window.aw.components || {};
     return constructor instanceof Function && (constructor===Component || Component.prototype.isPrototypeOf(constructor.prototype));
   };
   /**
-   * @function extend
-   * @memberOf aw.components.Component
+   * @function
+   * @name  aw.components.Component.extend
    * @param {Function} constructor
    * @return {Function}
    * @static
@@ -85,12 +86,12 @@ window.aw.components = window.aw.components || {};
     constructor.prototype.constructor = constructor;
   };
   /**
-   * @function registerController
-   * @memberOf aw.components.Component
+   * @function
+   * @name  aw.components.Component.registerController
    * @param controllerDefinition
    * @param componentDefinition
    * @returns {*}
-   * @constructor
+   * @static
    */
   Component.registerController = function Component_registerController(controllerDefinition, componentDefinition){
     if(controllerDefinition instanceof aw.components.utils.ComponentController){
@@ -128,8 +129,8 @@ window.aw.components = window.aw.components || {};
     return controllerDefinition;
   };
   /**
-   * @function forceFacade
-   * @memberOf aw.components.Component
+   * @function
+   * @name  aw.components.Component.forceFacade
    * @param $scope
    * @param instance
    * @param constructor

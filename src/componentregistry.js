@@ -14,6 +14,7 @@ window.aw.components = window.aw.components || {};
  * @namespace aw.components.utils
  */
 window.aw.components.utils = window.aw.components.utils || {};
+//TODO add Function.bind fallback with angular.bind for phantomjs
 /*
  * Component instance registry, holds all created component instances
  * and their scopes. Also, after adding new component will resolve its
@@ -23,20 +24,63 @@ window.aw.components.utils = window.aw.components.utils || {};
   var aw = window.aw;
   function ComponentScopeRegistry(){
     /**
+     * @type {ComponentScopeRegistry}
+     */
+    var registry = this;
+    /**
      * Component scope objects
      * @type {Object[]}
+     * @private
      */
     var scopes = [];
     /**
      * Component instances
      * @type {aw.components.Component[]}
+     * @private
      */
     var components = [];
     /**
      * Component interfaces
      * @type {aw.components.utils.ComponentInterface[]}
+     * @private
      */
     var interfaces = [];
+    /**
+     * @param {Object} $scope
+     * @returns {aw.components.utils.ComponentInterface}
+     * @private
+     */
+    function getInterface($scope){
+      if($scope.$$interface instanceof aw.components.utils.ComponentInterface) return $scope.$$interface;
+      var index = scopes.indexOf($scope);
+      var result;
+      if(index>=0){
+        result = interfaces[index];
+      }
+      return result;
+    }
+    /**
+     * Find parent component index in registry lists
+     * @function
+     * @param {Object} $scope
+     * @returns {number}
+     * @private
+     */
+    function findParentIndex($scope){
+      var index = -1;
+      var $child;
+      var $current = $scope.$parent || $scope.$root;
+      while($current && $current!=$child){
+        index = scopes.indexOf($current);
+        if (index >= 0) break;
+        else {
+          $child = $current;
+          $current = $child.$parent || $child.$root;
+        }
+      }
+      return index;
+    }
+    //------------------------------------------------------------ Public
     /**
      * Add component instance to registry. This will be
      * automatically done while component initialization.
@@ -49,63 +93,33 @@ window.aw.components.utils = window.aw.components.utils || {};
      */
     this.add = function ComponentScopeRegistry_add($scope, component, componentInterface){
       if(!$scope || !component) return;
-      var registry = this;
       scopes.push($scope);
       components.push(component);
       interfaces.push(componentInterface);
       $scope.$on('$destroy', function(){
-        registry.removeByScope($scope);
+        registry.remove(component);
       });
-      var parent = this.parentByScope($scope);
-      if(parent) {
-        parent.$$addChild(component);
-        componentInterface.$$setParent(parent);
+      var parentIndex = findParentIndex($scope);
+      if(parentIndex>=0){
+        interfaces[parentIndex].addChild(component);
+        componentInterface.setParent(parent);
       }
-    };
-    /**
-     * Find parent component by child component scope object.
-     * @function
-     * @name aw.components.utils.ComponentScopeRegistry#parentByScope
-     * @param {Object} $scope
-     * @returns {*}
-     */
-    this.parentByScope = function($scope){
-      var parent;
-      var $child;
-      var $current = $scope.$parent || $scope.$root;
-      while($current && $current!=$child){
-        parent = this.get($current);
-        if(parent) break;
-        else{
-          $child = $current;
-          $current = $child.$parent || $child.$root;
-        }
-      }
-      return parent;
     };
     /**
      * Find parent component.
      * @function
      * @name aw.components.utils.ComponentScopeRegistry#parent
-     * @param {aw.components.Component} component
+     * @param {aw.components.Component|Object} componentOrScope
      * @returns {*}
      */
-    this.parent = function(component){
-      var $scope = this.getScope(component);
-      return $scope ? this.parentByScope($scope) : null;
-    };
-    /**
-     * Remove component instance from registry by its scope.
-     * @function
-     * @name aw.components.utils.ComponentScopeRegistry#removeByScope
-     * @param {Object} $scope
-     * @instance
-     */
-    this.removeByScope = function ComponentScopeRegistry_removeByScope($scope){
-      var index = scopes.indexOf($scope);
-      if(index>=0){
-        remove(index);
+    this.parent = function ComponentScopeRegistry_parent(componentOrScope){
+      var index = -1;
+      if(componentOrScope instanceof aw.components.Component){
+        index = components.indexOf(componentOrScope);
+      }else{
+        index = scopes.indexOf(componentOrScope);
       }
+      return index>=0 ? interfaces[index].getParent() : null;
     };
     /**
      * Remove component instance from registry.
@@ -116,28 +130,21 @@ window.aw.components.utils = window.aw.components.utils || {};
      */
     this.remove = function ComponentScopeRegistry_remove(component){
       var index = components.indexOf(component);
-      if(index>=0){
-        remove(index);
-      }
-    };
-    /**
-     * Removes component by its index in internal list of components
-     * @function
-     * @param {number} index
-     * @private
-     */
-    var remove = (function ComponentScopeRegistry_removeByIndex(index){
       var $scope = scopes[index];
-      var component = components[index];
+      /**
+       * @type {aw.components.utils.ComponentInterface}
+       */
+      var componentInterface = interfaces[index];
       scopes.splice(index, 1);
       components.splice(index, 1);
+      interfaces.splice(index, 1);
       var parent = this.parentByScope($scope);
       if(parent) {
-        if ('$$removeChild' in parent) parent.$$removeChild(component);
-        if ('$$setParent' in component) component.$$setParent(null);
+        parent.$$removeChild(component);
+        componentInterface.setParent(null);
       }
-    }).bind(this);
-     /**
+    }
+    /**
      * @function
      * @name aw.components.utils.ComponentScopeRegistry#getScope
      * @param {aw.components.Component} component
@@ -154,22 +161,11 @@ window.aw.components.utils = window.aw.components.utils || {};
     /**
      * @function
      * @name aw.components.utils.ComponentScopeRegistry#get
+     * @param {Object} $scope
+     * @returns {aw.components.Component}
      */
     this.get = function ComponentScopeRegistry_get($scope){
-      if('$$component' in $scope && $scope.$$component instanceof aw.components.Component) return $scope.$$component;
-      var index = scopes.indexOf($scope);
-      var result;
-      if(index>=0){
-        result = components[index];
-      }
-      return result;
-    };
-    /**
-     * @function
-     * @name aw.components.utils.ComponentScopeRegistry#getInterface
-     */
-    this.getInterface = function ComponentScopeRegistry_getInterface($scope){
-      if('$$interface' in $scope && $scope.$$interface instanceof aw.components.utils.ComponentInterface) return $scope.$$interface;
+      if($scope.$$component instanceof aw.components.Component) return $scope.$$component;
       var index = scopes.indexOf($scope);
       var result;
       if(index>=0){

@@ -13,22 +13,22 @@ window.aw.utils = window.aw.utils || {};
    */
   function ValidationHandler(handler, timeout){
     /**
-     * @property handler
-     * @memberOf aw.utils.ValidationHandler
+     * @property
+     * @name  aw.utils.ValidationHandler#handler
      * @type {Function}
      * @instance
      */
     this.handler = handler;
     /**
-     * @property target
-     * @memberOf aw.utils.ValidationHandler
+     * @property
+     * @name  aw.utils.ValidationHandler#target
      * @type {Object}
      * @instance
      */
     this.target = null;
     /**
-     * @property timeout
-     * @memberOf aw.utils.ValidationHandler
+     * @property
+     * @name  aw.utils.ValidationHandler#timeout
      * @type {number}
      * @instance
      */
@@ -44,8 +44,8 @@ window.aw.utils = window.aw.utils || {};
 
     };
     /**
-     * @function call
-     * @memberOf aw.utils.ValidationHandler
+     * @function
+     * @name  aw.utils.ValidationHandler#call
      * @param {*} [rest]
      * @instance
      */
@@ -54,8 +54,8 @@ window.aw.utils = window.aw.utils || {};
       timeoutId = setTimeout(callHandler, timeout, this.target, arguments);
     };
     /**
-     * @function apply
-     * @memberOf aw.utils.ValidationHandler
+     * @function
+     * @name  aw.utils.ValidationHandler#apply
      * @param {Array} [args]
      * @param {Object} [target]
      * @instance
@@ -65,8 +65,8 @@ window.aw.utils = window.aw.utils || {};
       timeoutId = setTimeout(callHandler, timeout, this.target, args || []);
     };
     /**
-     * @function callImmediately
-     * @memberOf aw.utils.ValidationHandler
+     * @function
+     * @name  aw.utils.ValidationHandler#callImmediately
      * @param {*} [rest]
      * @instance
      */
@@ -75,8 +75,8 @@ window.aw.utils = window.aw.utils || {};
       callHandler(this.target, arguments);
     };
     /**
-     * @function applyImmediately
-     * @memberOf aw.utils.ValidationHandler
+     * @function
+     * @name  aw.utils.ValidationHandler#applyImmediately
      * @param {Array} [args]
      * @param {Object} [target]
      * @instance
@@ -86,8 +86,8 @@ window.aw.utils = window.aw.utils || {};
       callHandler(this.target, args || []);
     };
     /**
-     * @function isAvailable
-     * @memberOf aw.utils.ValidationHandler
+     * @function
+     * @name  aw.utils.ValidationHandler#isAvailable
      * @returns {boolean}
      * @instance
      */
@@ -95,8 +95,8 @@ window.aw.utils = window.aw.utils || {};
       return typeof(handler)==="function";
     };
     /**
-     * @function isRunning
-     * @memberOf aw.utils.ValidationHandler
+     * @function
+     * @name  aw.utils.ValidationHandler#isRunning
      * @returns {boolean}
      * @instance
      */
@@ -104,8 +104,8 @@ window.aw.utils = window.aw.utils || {};
       return !isNaN(timeoutId);
     };
     /**
-     * @function prevent
-     * @memberOf aw.utils.ValidationHandler
+     * @function
+     * @name  aw.utils.ValidationHandler#prevent
      * @instance
      */
     this.prevent = function ValidationHandler_prevent(){
@@ -115,8 +115,8 @@ window.aw.utils = window.aw.utils || {};
       }
     };
     /**
-     * @function clear
-     * @memberOf aw.utils.ValidationHandler
+     * @function
+     * @name  aw.utils.ValidationHandler#clear
      * @instance
      */
     this.clear = function ValidationHandler_clear(){
@@ -133,15 +133,15 @@ window.aw.utils = window.aw.utils || {};
     callHandler = (callHandler).bind(this);
   }
   /**
-   * @property DEFAULT_TIMEOUT
-   * @memberOf aw.utils.ValidationHandler
+   * @property
+   * @name  aw.utils.ValidationHandler.DEFAULT_TIMEOUT
    * @type {number}
    * @static
    */
   ValidationHandler.DEFAULT_TIMEOUT = 25;
   /**
-   * @function create
-   * @memberOf aw.utils.ValidationHandler
+   * @function
+   * @name  aw.utils.ValidationHandler.create
    * @param {Function} handler
    * @param {number} [timeout]
    * @param {Object} [target]

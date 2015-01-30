@@ -63,8 +63,8 @@ window.aw.events = window.aw.events || {};
   function EventListener($scope, updateHandler){
     var deferred;
     /**
-     * @function $fire
-     * @memberOf  aw.events.EventLisneter
+     * @function
+     * @name  aw.events.EventLisneter#$fire
      * @param {*} data
      * @instance
      */
@@ -77,16 +77,16 @@ window.aw.events = window.aw.events || {};
       }
     };
     /**
-     * @function $clear
-     * @memberOf  aw.events.EventLisneter
+     * @function
+     * @name  aw.events.EventLisneter#$clear
      * @instance
      */
     this.$clear = function EventListener_$clear(){
       deferred = $q.defer();
       var promise = deferred.promise;
       /**
-       * @function handle
-       * @memberOf  aw.events.EventLisneter
+       * @function
+       * @name  aw.events.EventLisneter#handle
        * @param {function} handler
        * @returns {Object|{then:function}}
        * @instance
@@ -97,8 +97,8 @@ window.aw.events = window.aw.events || {};
        * Basically it has 2 rules, one of them must pass:
        * 1. data.constructor === dataConstructor -- when dataConstructor parameter is of Function type
        * 2. typeof(data) === dataConstructor -- when dataConstructor parameter is of String type
-       * @function handleOfType
-       * @memberOf  aw.events.EventLisneter
+       * @function
+       * @name  aw.events.EventLisneter#handleOfType
        * @param {Function|string} dataConstructor
        * @param {Function} callback
        */
@@ -110,8 +110,8 @@ window.aw.events = window.aw.events || {};
         }
       };
       /**
-       * @property promise
-       * @memberOf  aw.events.EventLisneter
+       * @property
+       * @name  aw.events.EventLisneter#promise
        * @type {Object|{then:function, handle:function}}
        */
       this.promise = promise;
@@ -120,8 +120,8 @@ window.aw.events = window.aw.events || {};
   };
   events.EventListener = EventListener;
   /**
-   * @function init
-   * @memberOf aw.events.EventLisneter
+   * @function
+   * @name  aw.events.EventLisneter#init
    * @param $scope
    * @static
    */
@@ -129,8 +129,8 @@ window.aw.events = window.aw.events || {};
     EventListener.$scope = $scope;
   };
   /**
-   * @function create
-   * @memberOf aw.events.EventLisneter
+   * @function
+   * @name  aw.events.EventLisneter#create
    * @param {Object} $scope
    * @param {Function} [updateHandler] - Handler will be called after each event fired
    * @returns {aw.EventListener}
@@ -140,8 +140,8 @@ window.aw.events = window.aw.events || {};
     return new EventListener($scope || EventListener.$scope, updateHandler);
   };
   /**
-   * @function create
-   * @memberOf aw.events.EventLisneter
+   * @function
+   * @name  aw.events.EventLisneter#create
    * @param {object} promise
    * @param {function} callback
    * @returns {function}
@@ -158,8 +158,8 @@ window.aw.events = window.aw.events || {};
   /**
    * Wrap callback function making new callback that receives
    * new functionality -- enable(), disable() and isEnabled() methods.
-   * @function switchableCallback
-   * @memberOf aw.events.EventLisneter
+   * @function
+   * @name  aw.events.EventLisneter#switchableCallback
    * @param {Function} callback
    * @returns {SwitchableCallback}
    * @static
@@ -179,8 +179,8 @@ window.aw.events = window.aw.events || {};
     }
     /**
      * Is callback function enabled
-     * @function isEnabled
-     * @memberOf SwitchableCallback
+     * @function
+     * @name  SwitchableCallback#isEnabled
      * @returns {boolean}
      * @static
      */
@@ -189,8 +189,8 @@ window.aw.events = window.aw.events || {};
     };
     /**
      * Is callback function available and enabled
-     * @function isAvailable
-     * @memberOf SwitchableCallback
+     * @function
+     * @name  SwitchableCallback#isAvailable
      * @returns {boolean}
      * @static
      */
@@ -199,8 +199,8 @@ window.aw.events = window.aw.events || {};
     };
     /**
      * Enables callback allowing calls to it
-     * @function enable
-     * @memberOf SwitchableCallback
+     * @function
+     * @name  SwitchableCallback#enable
      * @static
      */
     SwitchableCallback.enable = function(){
@@ -208,8 +208,8 @@ window.aw.events = window.aw.events || {};
     };
     /**
      * Disables callback disallowing calls to it
-     * @function disable
-     * @memberOf SwitchableCallback
+     * @function
+     * @name  SwitchableCallback#disable
      * @static
      */
     SwitchableCallback.disable = function(){
@@ -217,8 +217,8 @@ window.aw.events = window.aw.events || {};
     };
     /**
      * Removes link to original callback making SwitchableCallback empty and useless
-     * @function destroy
-     * @memberOf SwitchableCallback
+     * @function
+     * @name  SwitchableCallback#destroy
      * @static
      */
     SwitchableCallback.destroy = function(){
@@ -230,8 +230,8 @@ window.aw.events = window.aw.events || {};
   /**
    * Wrap callback function making new callback that receives
    * new functionality -- enable(), disable() and isEnabled() methods.
-   * @function typeDependentCallback
-   * @memberOf aw.events.EventLisneter
+   * @function
+   * @name  aw.events.EventLisneter#typeDependentCallback
    * @param {Function} callback
    * @param {string|Function} dataConstructor
    * @returns {TypeDependentCallback}
@@ -251,8 +251,8 @@ window.aw.events = window.aw.events || {};
     }
     /**
      * Checks if callback can be used
-     * @function isAvailable
-     * @memberOf TypeDependentCallback
+     * @function
+     * @name  TypeDependentCallback#isAvailable
      * @static
      */
     TypeDependentCallback.isAvailable = function(){
@@ -260,8 +260,8 @@ window.aw.events = window.aw.events || {};
     };
     /**
      * Removes link to original callback making TypeDependentCallback empty and useless
-     * @function destroy
-     * @memberOf TypeDependentCallback
+     * @function
+     * @name  TypeDependentCallback#destroy
      * @static
      */
     TypeDependentCallback.destroy = function(){
