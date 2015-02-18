@@ -1,0 +1,35 @@
+{
+  "name": "gulp-build",
+  "description": "Dependencies for gulp build file",
+  "version": "0.0.0",
+  "dependencies": {
+    "gulp": "^3.8.10",
+    "gulp-rev": "^2.0.1",
+    "gulp-uglify": "^1.0.1",
+    "gulp-usemin": "^0.3.8",
+	"gulp-strip-comments": "^1.0.1",
+    "gulp-rename": "^1.2.0",
+    "gulp-open": "^0.3.2",
+    "connect-livereload": ">0.0.1",
+    "tiny-lr": ">0.0.1",
+    "path": ">0.0.1",
+	"strip-comments": "^0.3.2",
+    "express": ">0.1.9",
+    "glob": "^4.3.5"
+  },
+  "devDependencies": {
+    "gulp": "^3.8.10",
+    "gulp-rev": "^2.0.1",
+    "gulp-uglify": "^1.0.1",
+    "gulp-usemin": "^0.3.8",
+	"gulp-strip-comments": "^1.0.1",
+    "gulp-open": "^0.3.2",
+    "gulp-rename": "^1.2.0",
+    "connect-livereload": ">0.0.1",
+    "tiny-lr": ">0.0.1",
+    "path": ">0.0.1",
+	"strip-comments": "^0.3.2",
+    "express": ">0.1.0",
+    "glob": "^4.3.5"
+  }
+}

@@ -1,28 +1,31 @@
 /**
  * Created by Oleg Galaburda on 22.01.2015.
  */
-window.aw = window.aw || {};
-/**
- * @namespace aw.data
- */
-window.aw.data = window.aw.data || {};
-(function(){
-  /**
-   * @namespace aw.data.ComponentStates
-   * @type {{CREATED: string, INITIALIZED: string, DESTROYED: string}}
-   */
-  aw.data.ComponentStates = {
+module.config([
+  'aw',
+  function (aw) {
+    "use strict";
     /**
-     * @name aw.data.ComponentStates#CREATED
+     * @namespace aw.data
      */
-    "CREATED": "created",
+    aw.data = aw.data || {};
     /**
-     * @name aw.data.ComponentStates#INITIALIZED
+     * @namespace aw.data.ComponentStates
+     * @type {{CREATED: string, INITIALIZED: string, DESTROYED: string}}
      */
-    "INITIALIZED": "initialized",
-    /**
-     * @name aw.data.ComponentStates#DESTROYED
-     */
-    "DESTROYED": "destroyed"
-  };
-})();
+    aw.data.ComponentStates = {
+      /**
+       * @name aw.data.ComponentStates#CREATED
+       */
+      "CREATED": "created",
+      /**
+       * @name aw.data.ComponentStates#INITIALIZED
+       */
+      "INITIALIZED": "initialized",
+      /**
+       * @name aw.data.ComponentStates#DESTROYED
+       */
+      "DESTROYED": "destroyed"
+    };
+  }
+]);
