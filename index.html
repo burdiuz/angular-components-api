@@ -5,8 +5,9 @@
     <title>Angular Components API</title>
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
 </head>
-<body>
-Hello world!
+<body ng-app="aw.Application" ng-controller="aw.Application as application">
+{{application.label}}
+<directive property1="source1" property2="source2"></directive>
 </body>
 <!-- core libraries -->
 <script type="text/javascript" src="bower_components/jquery/dist/jquery.js"></script>
@@ -14,5 +15,6 @@ Hello world!
 <script type="text/javascript" src="bower_components/angular/angular.js"></script>
 <!-- angular components api -->
 <script type="text/javascript" src="dist/components-api.js"></script>
+<script type="text/javascript" src="application.js"></script>
 <!-- custom scripts, components, stuff -->
 </html>

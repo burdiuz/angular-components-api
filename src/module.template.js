@@ -3,32 +3,52 @@
  */
 (function () {
   "use strict";
-  var module = angular.module('aw.components');
-  module.constant('aw', {});
+  var module = angular.module('aw.components', []);
+  var aw = {};
+  module.constant('aw', aw);
   /*--data-*/
   /*--utils-*/
   /*--events-*/
   /*--components-utils-*/
   /*--components-*/
-  module.service('registerComponent', [
-      'aw',
-      function RegisterComponentService(aw) {
-        var self = this;
-        /**
-         * @type {aw.components.utils.ComponentScopeRegistry}
-         */
-        var registry = aw.components.utils.ComponentScopeRegistry;
-        /**
-         * @type {Function}
-         * @see aw.components.utils.ComponentScopeRegistry.registerController
-         */
-        self.controller = registry.registerController;
-        /**
-         * @type {Function}
-         * @see aw.components.utils.ComponentScopeRegistry.registerDirective
-         */
-        self.directive = registry.registerDirective;
+  function Components(){
+    /**
+     * @name componentsProvider#controller
+     * @type {Function}
+     * @see aw.components.utils.ComponentScopeRegistry.registerController
+     */
+    this.registerController = aw.components.Component.registerController;
+    /**
+     * @name componentsProvider#directive
+     * @type {Function}
+     * @see aw.components.utils.ComponentScopeRegistry.registerDirective
+     */
+    this.registerDirective = aw.components.Component.registerDirective;
+  }
+  var componentsInstance = new Components();
+  module.provider('components', function ComponentsProvider() {
+    Components.call(this);
+    this.$get = [
+      function ComponentsFactory() {
+        return componentsInstance;
       }
-    ]
-  );
+    ];
+  });
+  /**
+   * @name angular.components
+   */
+  Object.defineProperty(angular, "components", {value: componentsInstance, enumerable: true, writable: false});
+  /**
+   * @function
+   * @name angular.components.registerController
+   * @param controllerDefinition
+   * @param componentDefinition
+   */
+  /**
+   * @function
+   * @name angular.components.registerDirective
+   * @param directiveOptions
+   * @param componentDefinition
+   * @param controllerDefinition
+   */
 })();
